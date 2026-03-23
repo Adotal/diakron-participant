@@ -1,4 +1,8 @@
+import 'package:diakron_participant/data/repositories/auth/auth_repository.dart';
+import 'package:diakron_participant/ui/logout/view_models/logout_viewmodel.dart';
+import 'package:diakron_participant/ui/logout/widgets/logout_button.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeTempScreen extends StatefulWidget {
   const HomeTempScreen({super.key});
@@ -18,19 +22,6 @@ class _HomeTempScreenState extends State<HomeTempScreen> {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       // AppBar simple para poder volver atrás o cambiar tema si quisieras
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: theme.iconTheme, // Iconos negros o blancos según tema
-        actions: [
-          IconButton(
-            icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
-            onPressed: () {
-              //  _themeNotifier.value = isDark ? ThemeMode.light : ThemeMode.dark;
-            },
-          ),
-        ],
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -39,20 +30,30 @@ class _HomeTempScreenState extends State<HomeTempScreen> {
             children: [
               // Puntos
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(
-                    Icons.confirmation_number,
-                    size: 24,
-                    color: theme.iconTheme.color,
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.confirmation_number,
+                        size: 24,
+                        color: theme.iconTheme.color,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        "1,195",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: theme.textTheme.bodyLarge?.color,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    "1,195",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: theme.textTheme.bodyLarge?.color,
+
+                  LogoutButton(
+                    viewModel: LogoutViewModel(
+                      authRepository: context.read<AuthRepository>(),
                     ),
                   ),
                 ],
@@ -217,7 +218,7 @@ class _HomeTempScreenState extends State<HomeTempScreen> {
               color: const Color(0xFFFFE0B2),
               borderRadius: BorderRadius.circular(15),
               // Borde sutil para que se vea bien en fondo negro
-              border: Border.all(color: Colors.grey.withValues(alpha:  0.3)),
+              border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
