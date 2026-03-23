@@ -34,10 +34,10 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
     GoRoute(
       path: Routes.home,
       builder: (context, state) {
-        return HomeScreen(
-          viewModel: HomeViewModel(
-            authRepository: context.read<AuthRepository>(),
-          ),
+        return HomeTempScreen(
+          // viewModel: HomeViewModel(
+          //   authRepository: context.read<AuthRepository>(),
+          // ),
         );
       },
     ),
