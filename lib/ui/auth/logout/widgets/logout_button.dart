@@ -1,5 +1,5 @@
 import 'package:diakron_participant/routing/routes.dart';
-import 'package:diakron_participant/ui/logout/view_models/logout_viewmodel.dart';
+import 'package:diakron_participant/ui/auth/logout/view_models/logout_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

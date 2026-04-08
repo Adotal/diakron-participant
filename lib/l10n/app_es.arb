@@ -2,8 +2,6 @@
   "@@locale": "es",    
   "helloWorld": "Hola Mundo",
   "@helloWorld": {},
-  "administrators": "ADMINISTRADORES",
-  "@administrators": {},
   "participants": "PARTICIPANTES",
   "@participants": {},
   "email": "Correo electrónico",

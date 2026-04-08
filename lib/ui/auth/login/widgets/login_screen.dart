@@ -1,3 +1,4 @@
+import 'package:diakron_participant/data/repositories/auth/auth_repository.dart';
 import 'package:diakron_participant/l10n/app_localizations.dart';
 import 'package:diakron_participant/routing/routes.dart';
 import 'package:diakron_participant/ui/auth/login/view_models/login_viewmodel.dart';
@@ -8,6 +9,7 @@ import 'package:diakron_participant/ui/core/ui/form_button.dart';
 import 'package:diakron_participant/ui/core/ui/input_text.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, required this.viewModel});
@@ -21,7 +23,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
   final TextEditingController _email = TextEditingController(
-    text: 'adotal1484@gmail.com',
+    text: 'participant@gmail.com',
   );
 
   final TextEditingController _password = TextEditingController(
@@ -274,7 +276,7 @@ class _LoginScreenState extends State<LoginScreen>
                           ),
                           if (_animationController.value > 0.0) // 0.8
                             Text(
-                              AppLocalizations.of(context)!.administrators,
+                              AppLocalizations.of(context)!.participants,
                               style: const TextStyle(
                                 fontSize: Dimens.fontMedium,
                                 color: Colors.white70,
@@ -295,6 +297,10 @@ class _LoginScreenState extends State<LoginScreen>
   void _onResult() async {
     if (widget.viewModel.login.completed) {
       widget.viewModel.login.clearResult();
+
+      // LOCK ROUTER FOR ANIMATINO
+      context.read<AuthRepository>().lockRouter;
+
       setState(() {
         _isAnimating = true;
         _showForm = true;
@@ -318,8 +324,10 @@ class _LoginScreenState extends State<LoginScreen>
         curve: Curves.easeInOutQuart,
       );
 
-      // Ve a home
-      if (mounted) context.go(Routes.home);
+      // Redeirect atomatically to home
+      // UNLOCK ROUTER
+
+      context.read<AuthRepository>().unlock();
     }
 
     if (widget.viewModel.login.error) {

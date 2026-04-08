@@ -2,14 +2,13 @@ import 'package:diakron_participant/utils/result.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
-  final SupabaseClient _supabase = Supabase.instance.client;
+final SupabaseClient _supabase = Supabase.instance.client;
 
-  // Provide a stream of auth changes
   Stream<AuthState> get onAuthStateChange => _supabase.auth.onAuthStateChange;
-
   Session? get currentSession => _supabase.auth.currentSession;
+  String? get currentUserId => _supabase.auth.currentUser?.id;
+  bool get isLogged => currentSession != null;
 
-  // Sign in (login)
   Future<Result<AuthResponse>> signInEmailPassword({
     required String email,
     required String password,
@@ -19,12 +18,27 @@ class AuthService {
         email: email,
         password: password,
       );
+
+      // 1. Use maybeSingle() to prevent Postgrest exceptions if the user row is missing
+      final data = await _supabase
+          .from('users')
+          .select('user_type')
+          .eq('id', currentUserId!)
+          .maybeSingle();
+
+      // 2. Safely check the data
+      bool isParticipant = data != null && data['user_type'] == 'participant';
+
+      if (!isParticipant) {
+        await _supabase.auth.signOut(); // Ensure explicit sign-out
+        return Result.error(Exception('Not participant credentials'));
+      }
+
       return Result.ok(result);
     } on AuthException catch (error) {
-      // Supabase error
       return Result.error(Exception(error.message));
     } catch (error) {
-      return Result.error(Exception("Unknow error"));
+      return Result.error(Exception("Unknown error")); // Fixed typo
     }
   }
 
@@ -34,7 +48,7 @@ class AuthService {
     required String password,
     required String username,
     required String surnames,
-    required String phoneNumber,    
+    required String phoneNumber,
   }) async {
     try {
       final result = await _supabase.auth.signUp(
@@ -46,8 +60,8 @@ class AuthService {
           'phone_number': phoneNumber,
           // Empieza desactivado porque es solicitud de registro
           'is_active': false,
-          // Siempre es admin
-          'user_type': 'admin',
+          // As partiicipant user
+          'user_type': 'participant',
           'is_superadmin': false,
         },
       );
@@ -69,7 +83,7 @@ class AuthService {
     try {
       await _supabase.auth.resetPasswordForEmail(
         email,
-        redirectTo: 'io.supabase.diakron.admin://reset-password/',
+        redirectTo: 'io.supabase.diakron.participant://reset-password/',
       );
       return Result.ok(null);
     } catch (error) {

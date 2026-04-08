@@ -1,17 +1,20 @@
 import 'package:diakron_participant/data/repositories/auth/auth_repository.dart';
-import 'package:diakron_participant/ui/logout/view_models/logout_viewmodel.dart';
-import 'package:diakron_participant/ui/logout/widgets/logout_button.dart';
+import 'package:diakron_participant/ui/auth/logout/view_models/logout_viewmodel.dart';
+import 'package:diakron_participant/ui/auth/logout/widgets/logout_button.dart';
+import 'package:diakron_participant/ui/home/view_models/home_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HomeTempScreen extends StatefulWidget {
-  const HomeTempScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key, required this.viewModel});
+
+  final HomeViewModel viewModel;
 
   @override
-  State<HomeTempScreen> createState() => _HomeTempScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeTempScreenState extends State<HomeTempScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   @override

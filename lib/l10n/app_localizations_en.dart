@@ -12,9 +12,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get helloWorld => 'Hello World!';
 
   @override
-  String get administrators => 'ADMINISTRATORS';
-
-  @override
   String get participants => 'PARTICIPANTES';
 
   @override

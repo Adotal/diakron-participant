@@ -104,12 +104,6 @@ abstract class AppLocalizations {
   /// **'Hola Mundo'**
   String get helloWorld;
 
-  /// No description provided for @administrators.
-  ///
-  /// In es, this message translates to:
-  /// **'ADMINISTRADORES'**
-  String get administrators;
-
   /// No description provided for @participants.
   ///
   /// In es, this message translates to:

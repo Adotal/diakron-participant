@@ -89,7 +89,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Nueva contraseña actualizada')));
+      
       context.go(Routes.login);
+      
     }
 
     if (widget.viewModel.updatePassword.error) {
