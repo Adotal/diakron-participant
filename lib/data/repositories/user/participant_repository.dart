@@ -1,5 +1,6 @@
 import 'package:diakron_participant/data/services/database_service.dart';
 import 'package:diakron_participant/models/coupon/coupon.dart';
+import 'package:diakron_participant/models/store/store.dart';
 import 'package:diakron_participant/models/users/participant.dart';
 import 'package:diakron_participant/utils/result.dart';
 import 'package:logger/logger.dart';
@@ -29,11 +30,11 @@ class ParticipantRepository {
       case Error<Map<String, dynamic>>():
         return Result.error(result.error);
     }
-  }  
+  }
 
   // THE NEXT CODE IS INTENDED FOR RETRIEVING COUPONS, STORES AND OTHER INFO, IT MUST BE MOVED TO SEPARATE REPOSITORIES
 
-    Future<Result<List<Coupon>>> fetchCoupons() async {
+  Future<Result<List<Coupon>>> fetchCoupons() async {
     try {
       final result = await _databaseService.fetchCoupons();
       switch (result) {
@@ -49,6 +50,37 @@ class ParticipantRepository {
       }
     } on Exception catch (e) {
       return Result.error(e);
+    }
+  }
+
+  Future<Result<Coupon>> fetchCoupon({required int couponId}) async {
+    try {
+      final map = await _databaseService.getRecordById(
+        table: 'coupons',
+        id: '$couponId',
+      );
+
+      final Coupon coupon = Coupon.fromJson(map);
+
+      return Result.ok(coupon);
+    } on Exception catch (error) {
+      return Result.error(error);
+    }
+  }
+
+  Future<Result<Store>> fetchStore({required String storeId}) async {
+    try {
+      final map = await _databaseService.getRecordById(
+        table: 'stores',
+        columns: 'id, commercial_name, address, category, post_code, schedule, path_logo',
+        id: storeId,
+      );
+
+      final Store coupon = Store.fromJson(map);
+
+      return Result.ok(coupon);
+    } on Exception catch (error) {
+      return Result.error(error);
     }
   }
 }

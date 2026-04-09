@@ -26,12 +26,24 @@ final SupabaseClient _supabase = Supabase.instance.client;
       // Retrieve MAX 100 records
       final result = await _supabase
           .from('coupons')
-          .select()
+          .select().eq('is_active', true)
           .limit(100);
       return Result.ok(result);
     } on Exception catch (error) {
       return Result.error(error);
     }
+  }
+
+    Future<Map<String, dynamic>> getRecordById({
+    required String table,
+    String columns = '*',
+    required String id,
+  }) async {
+    return await _supabase
+        .from(table)
+        .select(columns)
+        .eq('id', id)
+        .single(); // Trae un solo objeto, no una lista
   }
   
 }

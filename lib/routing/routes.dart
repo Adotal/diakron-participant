@@ -8,6 +8,11 @@ abstract final class Routes {
   static const resetpassword = '/reset-password';
   static const signup = '/signup';
 
+  // static const coupon = '/$homeRelative/$couponRelative';
+  // static const couponRelative = 'coupon';
+
+  static String couponById(String id) => '$home/$id';
+  
   static const progressRelative = 'progress';
   static const progress = '/$progressRelative';
 

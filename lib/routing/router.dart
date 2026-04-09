@@ -10,6 +10,8 @@ import 'package:diakron_participant/ui/auth/reset_password/view_models/reset_pas
 import 'package:diakron_participant/ui/auth/reset_password/widgets/reset_password_screen.dart';
 import 'package:diakron_participant/ui/auth/sigunp/view_models/signup_viewmodel.dart';
 import 'package:diakron_participant/ui/auth/sigunp/widgets/signup_screen.dart';
+import 'package:diakron_participant/ui/home/coupon_details/view_models/coupon_detail_viewmodel.dart';
+import 'package:diakron_participant/ui/home/coupon_details/widgets/coupon_detail_screen.dart';
 import 'package:diakron_participant/ui/profile/view_models/profile_viewmodel.dart';
 import 'package:diakron_participant/ui/profile/widgets/profle_screen.dart';
 import 'package:diakron_participant/ui/progress/widgets/progress_screen.dart';
@@ -37,13 +39,29 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
           pageBuilder: (context, state) => CustomTransitionPage(
             key: state.pageKey,
             child: HomeScreen(
-              viewModel: HomeViewModel(participantRepository: context.read<ParticipantRepository>()),
+              viewModel: HomeViewModel(
+                participantRepository: context.read<ParticipantRepository>(),
+              ),
             ),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
               // Use a simple fade so the pre-charged home page appears smoothly
               return FadeTransition(opacity: animation, child: child);
             },
           ),
+          routes: [
+            GoRoute(
+              path: ':id', // This matches the ${center.id} in your push
+              builder: (context, state) {
+                final String idString = state.pathParameters['id']!;
+                // Extract the ID from the URL path
+                final viewModel = CouponDetailViewmodel(
+                  participantRepository: context.read<ParticipantRepository>(),
+                  couponId: int.parse(idString),
+                );
+                return CouponDetailScreen(viewModel: viewModel);
+              },
+            ),
+          ],
         ),
         GoRoute(
           path: Routes.progress,
@@ -95,7 +113,11 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
         GoRoute(
           path: Routes.profile,
           builder: (context, state) {
-            return ProfileScreen(viewModel: ProfileViewmodel(participantRepository: context.read<ParticipantRepository>()));
+            return ProfileScreen(
+              viewModel: ProfileViewmodel(
+                participantRepository: context.read<ParticipantRepository>(),
+              ),
+            );
           },
         ),
       ],
