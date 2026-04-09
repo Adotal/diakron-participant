@@ -23,6 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         LogoutButton(
           viewModel: LogoutViewModel(
             authRepository: context.read(),
+            participantRepository: context.read()
           ),
         ),
       ],

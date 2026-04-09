@@ -32,6 +32,10 @@ class ParticipantRepository {
     }
   }
 
+  void clear() {
+    _cachedParticipant = null;
+  }
+
   // THE NEXT CODE IS INTENDED FOR RETRIEVING COUPONS, STORES AND OTHER INFO, IT MUST BE MOVED TO SEPARATE REPOSITORIES
 
   Future<Result<List<Coupon>>> fetchCoupons() async {

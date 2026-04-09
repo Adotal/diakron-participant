@@ -1,6 +1,5 @@
 import 'package:diakron_participant/models/store/store.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class BusinessDetailsDialog extends StatelessWidget {
   const BusinessDetailsDialog({super.key, required this.store});

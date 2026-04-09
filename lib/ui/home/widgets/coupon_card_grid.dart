@@ -1,6 +1,5 @@
 import 'package:diakron_participant/models/coupon/coupon.dart';
 import 'package:diakron_participant/routing/routes.dart';
-import 'package:diakron_participant/ui/core/themes/colors.dart';
 import 'package:diakron_participant/ui/home/widgets/custom_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

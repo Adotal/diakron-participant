@@ -19,7 +19,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
     
     return CustomScreen(
       title: 'Progreso',
-      actions: [LogoutButton(viewModel: LogoutViewModel(authRepository: context.read()))],
+      actions: [LogoutButton(viewModel: LogoutViewModel(authRepository: context.read(),
+      participantRepository: context.read()))],
       
       child: SafeArea(
         child: GridView.count(
