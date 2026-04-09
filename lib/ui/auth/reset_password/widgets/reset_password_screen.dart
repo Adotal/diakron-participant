@@ -42,6 +42,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScreen(
+      title: 'Reestablecer contraseña',
       child: Center(
         child: ListView(
           shrinkWrap: true,

@@ -1,4 +1,3 @@
-import 'package:diakron_participant/data/repositories/auth/auth_repository.dart';
 import 'package:diakron_participant/l10n/app_localizations.dart';
 import 'package:diakron_participant/routing/routes.dart';
 import 'package:diakron_participant/ui/auth/sigunp/view_models/signup_viewmodel.dart';
@@ -8,7 +7,6 @@ import 'package:diakron_participant/ui/core/ui/form_button.dart';
 import 'package:diakron_participant/ui/core/ui/input_text.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key, required this.viewModel});

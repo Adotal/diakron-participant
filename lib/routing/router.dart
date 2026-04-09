@@ -1,5 +1,6 @@
 // Routes manager
 import 'package:diakron_participant/data/repositories/auth/auth_repository.dart';
+import 'package:diakron_participant/data/repositories/user/participant_repository.dart';
 import 'package:diakron_participant/routing/routes.dart';
 import 'package:diakron_participant/ui/auth/forgot_password/view_models/forgot_password_viewmodel.dart';
 import 'package:diakron_participant/ui/auth/forgot_password/widgets/forgot_password_screen.dart';
@@ -9,8 +10,12 @@ import 'package:diakron_participant/ui/auth/reset_password/view_models/reset_pas
 import 'package:diakron_participant/ui/auth/reset_password/widgets/reset_password_screen.dart';
 import 'package:diakron_participant/ui/auth/sigunp/view_models/signup_viewmodel.dart';
 import 'package:diakron_participant/ui/auth/sigunp/widgets/signup_screen.dart';
+import 'package:diakron_participant/ui/profile/view_models/profile_viewmodel.dart';
+import 'package:diakron_participant/ui/profile/widgets/profle_screen.dart';
+import 'package:diakron_participant/ui/progress/widgets/progress_screen.dart';
 import 'package:diakron_participant/ui/home/view_models/home_viewmodel.dart';
 import 'package:diakron_participant/ui/home/widgets/home_screen.dart';
+import 'package:diakron_participant/ui/main/widgets/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +27,80 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
   redirect: _redirect,
 
   routes: [
+    ShellRoute(
+      builder: (context, state, child) {
+        return MainScreen(child: child);
+      },
+      routes: [
+        GoRoute(
+          path: Routes.home,
+          pageBuilder: (context, state) => CustomTransitionPage(
+            key: state.pageKey,
+            child: HomeScreen(
+              viewModel: HomeViewModel(participantRepository: context.read<ParticipantRepository>()),
+            ),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              // Use a simple fade so the pre-charged home page appears smoothly
+              return FadeTransition(opacity: animation, child: child);
+            },
+          ),
+        ),
+        GoRoute(
+          path: Routes.progress,
+          builder: (context, state) {
+            return ProgressScreen();
+          },
+        ),
+
+        GoRoute(
+          path: Routes.scanner,
+          builder: (context, state) {
+            return const Scaffold(body: Center(child: Text("Scanner")));
+          },
+        ),
+
+        GoRoute(
+          path: Routes.map,
+          builder: (context, state) {
+            return const Scaffold(body: Center(child: Text("Map")));
+          },
+          // routes: [
+          //   GoRoute(
+          //     path: Routes
+          //         .createRelative, // This matches the ${center.id} in your push
+          //     builder: (context, state) {
+          //       final viewModel = CreateCouponViewmodel(
+
+          //         userRepository: context.read<UserRepository>(),
+          //       );
+          //       return CreateCouponScreen(viewModel: viewModel);
+          //     },
+          //   ),
+
+          //   GoRoute(
+          //     path: ':id', // This matches the ${center.id} in your push
+          //     builder: (context, state) {
+          //       final String idString = state.pathParameters['id']!;
+          //       // Extract the ID from the URL path
+          //       final viewModel = RUDCouponViewmodel(
+          //         userRepository: context.read<UserRepository>(),
+          //         couponId: int.parse(idString),
+          //       );
+          //       return RUDCouponScreen(viewModel: viewModel);
+          //     },
+          //   ),
+          // ],
+        ),
+
+        GoRoute(
+          path: Routes.profile,
+          builder: (context, state) {
+            return ProfileScreen(viewModel: ProfileViewmodel(participantRepository: context.read<ParticipantRepository>()));
+          },
+        ),
+      ],
+    ),
+
     GoRoute(
       path: Routes.login,
       builder: (context, state) {
@@ -30,17 +109,6 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
         );
         return LoginScreen(viewModel: viewModel);
       },
-    ),
-    GoRoute(
-      path: Routes.home,
-      pageBuilder: (context, state) => CustomTransitionPage(
-        key: state.pageKey,
-        child: HomeScreen(viewModel: HomeViewModel(authRepository: context.read()),),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          // Use a simple fade so the pre-charged home page appears smoothly
-          return FadeTransition(opacity: animation, child: child);
-        },
-      ),
     ),
     GoRoute(
       path: Routes.forgotpassword,
@@ -80,16 +148,14 @@ Future<String?> _redirect(BuildContext context, GoRouterState state) async {
     return null;
   }
 
-
   final bool loggedIn = authRepo.isAuthenticated;
-    // Auth Check
+  // Auth Check
   final bool isAtAuthPage = [
     Routes.login,
     Routes.signup,
     Routes.forgotpassword,
-    Routes.resetpassword
+    Routes.resetpassword,
   ].contains(state.matchedLocation);
-
 
   // // Locations
   final bool isAtLogin = state.matchedLocation == Routes.login;
@@ -106,7 +172,6 @@ Future<String?> _redirect(BuildContext context, GoRouterState state) async {
   if (!loggedIn) {
     return isAtAuthPage ? null : Routes.login;
   }
-
 
   // Logged in in login go Home
   if (loggedIn && isAtLogin) {
