@@ -1,4 +1,3 @@
-import 'package:diakron_participant/models/users/user_base/user_base.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

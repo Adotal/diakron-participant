@@ -19,13 +19,6 @@ class BusinessCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Business Logo
-              // Container(
-              //   height: 60,
-              //   width: 60,
-              //   decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-              //   child:
-              // ),
               SizedBox(
                 width: 100,
                 height: 100,

@@ -72,13 +72,63 @@ class ParticipantRepository {
     try {
       final map = await _databaseService.getRecordById(
         table: 'stores',
-        columns: 'id, commercial_name, address, category, post_code, schedule, path_logo',
+        columns:
+            'id, commercial_name, address, category, post_code, schedule, path_logo',
         id: storeId,
       );
 
       final Store coupon = Store.fromJson(map);
 
       return Result.ok(coupon);
+    } on Exception catch (error) {
+      return Result.error(error);
+    }
+  }
+
+  Future<Result<void>> addFavorite({
+    required int couponId,
+    required String participantId,
+  }) async {
+    try {
+      final Map<String, dynamic> values = {
+        'id_coupon': couponId,
+        'id_participant': participantId,
+      };
+      final result = await _databaseService.insertTable(
+        table: 'favorite_coupons',
+        values: values,
+      );
+      return result;
+    } on Exception catch (error) {
+      return Result.error(error);
+    }
+  }
+
+  Future<Result<bool>> favoriteCoupon({
+    required int couponId,
+    required String participantId,
+  }) async {
+    try {
+      final favoriteCoupon = await _databaseService.addfavoriteCoupon(
+        couponId: couponId,
+        participantId: participantId,
+      );
+      return favoriteCoupon;
+    } on Exception catch (error) {
+      return Result.error(error);
+    }
+  }
+
+  Future<Result<void>> deleteFavorite({
+    required int couponId,
+    required String participantId,
+  }) async {
+    try {
+      final favoriteCoupon = await _databaseService.delfavoriteCoupon(
+        couponId: couponId,
+        participantId: participantId,
+      );
+      return favoriteCoupon;
     } on Exception catch (error) {
       return Result.error(error);
     }

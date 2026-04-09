@@ -2,8 +2,8 @@ import 'package:diakron_participant/utils/result.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DatabaseService {
-final SupabaseClient _supabase = Supabase.instance.client;
-    Future<Result<Map<String, dynamic>>> getParticipant() async {
+  final SupabaseClient _supabase = Supabase.instance.client;
+  Future<Result<Map<String, dynamic>>> getParticipant() async {
     try {
       if (_supabase.auth.currentUser != null) {
         final participant = await _supabase
@@ -19,14 +19,13 @@ final SupabaseClient _supabase = Supabase.instance.client;
     }
   }
 
-
-   Future<Result<List<Map<String, dynamic>>>> fetchCoupons(   
-  ) async {
+  Future<Result<List<Map<String, dynamic>>>> fetchCoupons() async {
     try {
       // Retrieve MAX 100 records
       final result = await _supabase
           .from('coupons')
-          .select().eq('is_active', true)
+          .select()
+          .eq('is_active', true)
           .limit(100);
       return Result.ok(result);
     } on Exception catch (error) {
@@ -34,7 +33,7 @@ final SupabaseClient _supabase = Supabase.instance.client;
     }
   }
 
-    Future<Map<String, dynamic>> getRecordById({
+  Future<Map<String, dynamic>> getRecordById({
     required String table,
     String columns = '*',
     required String id,
@@ -45,5 +44,51 @@ final SupabaseClient _supabase = Supabase.instance.client;
         .eq('id', id)
         .single(); // Trae un solo objeto, no una lista
   }
-  
+
+  Future<Result<void>> insertTable({
+    required String table,
+    required Map<String, dynamic> values,
+  }) async {
+    try {
+      await _supabase.from(table).insert(values);
+      return Result.ok(null);
+    } on Exception catch (error) {
+      return Result.error(error);
+    }
+  }
+
+  Future<Result<bool>> addfavoriteCoupon({
+    required int couponId,
+    required String participantId,
+  }) async {
+    try {
+      final response = await _supabase
+          .from('favorite_coupons')
+          .select('id')
+          .eq('id_coupon', couponId)
+          .eq('id_participant', participantId)
+          .maybeSingle(); // Returns null if no record is found
+
+      final isFavorite = (response != null);
+      return Result.ok(isFavorite);
+    } on Exception catch (error) {
+      return Result.error(error);
+    }
+  }
+
+  Future<Result<void>> delfavoriteCoupon({
+    required int couponId,
+    required String participantId,
+  }) async {
+    try {
+      final response = await _supabase
+          .from('favorite_coupons')
+          .delete()
+          .eq('id_coupon', couponId)
+          .eq('id_participant', participantId);
+      return Result.ok(null);
+    } on Exception catch (error) {
+      return Result.error(error);
+    }
+  }
 }

@@ -1,5 +1,4 @@
 import 'package:diakron_participant/models/coupon/coupon.dart';
-import 'package:diakron_participant/models/store/store.dart';
 import 'package:diakron_participant/ui/core/ui/error_indicator.dart';
 import 'package:diakron_participant/ui/home/coupon_details/view_models/coupon_detail_viewmodel.dart';
 import 'package:diakron_participant/ui/home/coupon_details/widgets/business_card.dart';
@@ -16,6 +15,27 @@ class CouponDetailScreen extends StatefulWidget {
 }
 
 class _CouponDetailScreenState extends State<CouponDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    widget.viewModel.toggleFavorite.addListener(_onAddFavorite);
+  }
+
+  @override
+  void didUpdateWidget(covariant CouponDetailScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.viewModel != widget.viewModel) {
+      oldWidget.viewModel.toggleFavorite.removeListener(_onAddFavorite);
+      widget.viewModel.toggleFavorite.addListener(_onAddFavorite);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.viewModel.toggleFavorite.removeListener(_onAddFavorite);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -103,11 +123,46 @@ class _CouponDetailScreenState extends State<CouponDetailScreen> {
                                   ),
                                 ),
                               ),
-                              IconButton(
-                                icon: const Icon(Icons.favorite_border),
-                                iconSize: 28,
-                                onPressed: () {
-                                  // Add to favorites logic
+                              ListenableBuilder(
+                                listenable: widget.viewModel.toggleFavorite,
+                                builder: (context, _) {
+                                  final bool isFavorite = widget
+                                      .viewModel
+                                      .isFavorite; // Assuming this bool exists
+
+                                  return IconButton(
+                                    iconSize: 28,
+                                    onPressed:
+                                        widget.viewModel.toggleFavorite.execute,
+                                    icon: AnimatedSwitcher(
+                                      duration: const Duration(
+                                        milliseconds: 300,
+                                      ),
+                                      transitionBuilder:
+                                          (
+                                            Widget child,
+                                            Animation<double> animation,
+                                          ) {
+                                            // This creates a "pop" effect by scaling the heart up and down
+                                            return ScaleTransition(
+                                              scale: animation,
+                                              child: child,
+                                            );
+                                          },
+                                      // Unique keys are required so AnimatedSwitcher knows when to swap
+                                      child: isFavorite
+                                          ? const Icon(
+                                              Icons.favorite,
+                                              key: ValueKey('favorite_solid'),
+                                              color: Colors.red,
+                                            )
+                                          : const Icon(
+                                              Icons.favorite_border,
+                                              key: ValueKey('favorite_border'),
+                                              color: Colors.black,
+                                            ),
+                                    ),
+                                  );
                                 },
                               ),
                             ],
@@ -175,8 +230,6 @@ class _CouponDetailScreenState extends State<CouponDetailScreen> {
                           const SizedBox(height: 30), // Bottom padding
                         ],
                       ),
-
-                      // 2. Floating Card (Business Details)
                     ],
                   ),
                 ),
@@ -188,19 +241,48 @@ class _CouponDetailScreenState extends State<CouponDetailScreen> {
     );
   }
 
-  // --- WIDGET BUILDER METHODS ---
-  Widget _buildHeaderImage(Coupon coupon) {
-    return Positioned.fill(
-      child: Image.network(
-        coupon.urlImage,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) =>
-            const Center(child: Text("Error cargando imagen")),
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return const Center(child: CircularProgressIndicator());
-        },
-      ),
-    );
+  void _onAddFavorite() {
+    if (widget.viewModel.toggleFavorite.completed) {
+      widget.viewModel.toggleFavorite.clearResult();
+
+      if (widget.viewModel.isFavorite) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Cupón añadido a favoritos!"),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Cupón eliminado de favoritos!"),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      }
+    }
+
+    if (widget.viewModel.toggleFavorite.error) {
+      widget.viewModel.toggleFavorite.clearResult();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Error añadiendo cupón a favoritos")),
+      );
+    }
   }
+}
+
+// --- WIDGET BUILDER METHODS ---
+Widget _buildHeaderImage(Coupon coupon) {
+  return Positioned.fill(
+    child: Image.network(
+      coupon.urlImage,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) =>
+          const Center(child: Text("Error cargando imagen")),
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return const Center(child: CircularProgressIndicator());
+      },
+    ),
+  );
 }
