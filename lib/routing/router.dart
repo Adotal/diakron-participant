@@ -1,5 +1,9 @@
 // Routes manager
+import 'dart:collection';
+
 import 'package:diakron_participant/data/repositories/auth/auth_repository.dart';
+import 'package:diakron_participant/data/repositories/map/map_repository.dart';
+import 'package:diakron_participant/data/repositories/map/map_repository_impl.dart';
 import 'package:diakron_participant/data/repositories/user/participant_repository.dart';
 import 'package:diakron_participant/routing/routes.dart';
 import 'package:diakron_participant/ui/auth/forgot_password/view_models/forgot_password_viewmodel.dart';
@@ -12,6 +16,8 @@ import 'package:diakron_participant/ui/auth/sigunp/view_models/signup_viewmodel.
 import 'package:diakron_participant/ui/auth/sigunp/widgets/signup_screen.dart';
 import 'package:diakron_participant/ui/home/coupon_details/view_models/coupon_detail_viewmodel.dart';
 import 'package:diakron_participant/ui/home/coupon_details/widgets/coupon_detail_screen.dart';
+import 'package:diakron_participant/ui/map/view_models/map_viewmodel.dart';
+import 'package:diakron_participant/ui/map/widgets/map_screen.dart';
 import 'package:diakron_participant/ui/profile/view_models/profile_viewmodel.dart';
 import 'package:diakron_participant/ui/profile/widgets/profle_screen.dart';
 import 'package:diakron_participant/ui/progress/view_models/favorites_viewmodel.dart';
@@ -83,7 +89,8 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
         GoRoute(
           path: Routes.map,
           builder: (context, state) {
-            return const Scaffold(body: Center(child: Text("Map")));
+            final viewModel = MapViewModel(repository: MapRepositoryImpl());
+            return MapScreen(viewModel: viewModel);
           },
           // routes: [
           //   GoRoute(
@@ -166,12 +173,7 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
 );
 Future<String?> _redirect(BuildContext context, GoRouterState state) async {
   final authRepo = context.read<AuthRepository>();
-  final logger = Logger();
-  logger.w('rouer');
-  // NEW: Highest Priority Guard.
-  // If we are currently logging in and querying the 'users' table, do nothing.
- 
-
+  
   final bool loggedIn = authRepo.isAuthenticated;
   // Auth Check
   final bool isAtAuthPage = [
