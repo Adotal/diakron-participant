@@ -1,7 +1,10 @@
+import 'package:diakron_participant/ui/auth/logout/view_models/logout_viewmodel.dart';
+import 'package:diakron_participant/ui/auth/logout/widgets/logout_button.dart';
 import 'package:diakron_participant/ui/core/ui/custom_screen.dart';
 import 'package:diakron_participant/ui/profile/view_models/profile_viewmodel.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RecyclingData {
   final Map<String, int> materials; // { 'Metal': 10, 'Plastic': 4, ... }
@@ -35,7 +38,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return CustomScreen(
       title: 'Progreso',
-      actions: [IconButton(onPressed: null, icon: Icon(Icons.person, color: Colors.white,))],
+      actions: [IconButton(onPressed: null, icon: Icon(Icons.person, color: Colors.white,)),
+      LogoutButton(viewModel: LogoutViewModel(authRepository: context.read(), participantRepository: context.read()))],
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),

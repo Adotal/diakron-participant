@@ -38,7 +38,6 @@ class _SignupScreenState extends State<SignupScreen> {
     text: '123456789',
   );
 
-  bool _isPasswordObscured = true;
 
   @override
   void initState() {
@@ -144,40 +143,14 @@ class _SignupScreenState extends State<SignupScreen> {
                 InputText(
                   controller: _password,
                   hintText: AppLocalizations.of(context)!.password,
-                  obscureText: _isPasswordObscured,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isPasswordObscured
-                          ? Icons.visibility_off
-                          : Icons.visibility,
-                      color: Colors.grey,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordObscured = !_isPasswordObscured;
-                      });
-                    },
-                  ),
+                  isPassword: true,
                 ),
                 const SizedBox(height: Dimens.paddingVertical),
                 // Field confirm password
                 InputText(
                   controller: _confirmPassword,
-                  hintText: AppLocalizations.of(context)!.password,
-                  obscureText: _isPasswordObscured,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isPasswordObscured
-                          ? Icons.visibility_off
-                          : Icons.visibility,
-                      color: Colors.grey,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordObscured = !_isPasswordObscured;
-                      });
-                    },
-                  ),
+                  hintText: AppLocalizations.of(context)!.confirmPassword,
+                  isPassword: true,
                 ),
 
                 const SizedBox(height: 35),

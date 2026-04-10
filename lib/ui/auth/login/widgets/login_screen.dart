@@ -30,7 +30,6 @@ class _LoginScreenState extends State<LoginScreen>
     text: '123456789',
   );
 
-  bool _isPasswordObscured = true;
   late AnimationController _animationController;
   late Animation<double> _borderRadiusAnimation;
   bool _isAnimating = false;
@@ -128,18 +127,7 @@ class _LoginScreenState extends State<LoginScreen>
           InputText(
             controller: _password,
             hintText: AppLocalizations.of(context)!.password,
-            obscureText: _isPasswordObscured,
-            suffixIcon: IconButton(
-              icon: Icon(
-                _isPasswordObscured ? Icons.visibility_off : Icons.visibility,
-                color: Colors.grey,
-              ),
-              onPressed: () {
-                setState(() {
-                  _isPasswordObscured = !_isPasswordObscured;
-                });
-              },
-            ),
+            isPassword: true,
           ),
           const SizedBox(height: 10),
 
@@ -326,8 +314,9 @@ class _LoginScreenState extends State<LoginScreen>
 
       // Redeirect atomatically to home
       // UNLOCK ROUTER
-
-      context.read<AuthRepository>().unlock();
+      if (mounted) {
+        context.read<AuthRepository>().unlockRouter();
+      }
     }
 
     if (widget.viewModel.login.error) {

@@ -19,14 +19,14 @@ final SupabaseClient _supabase = Supabase.instance.client;
         password: password,
       );
 
-      // 1. Use maybeSingle() to prevent Postgrest exceptions if the user row is missing
+      // Check user role is participant, maybeSingle() to prevent Postgrest exceptions if row is missing
       final data = await _supabase
           .from('users')
           .select('user_type')
           .eq('id', currentUserId!)
           .maybeSingle();
 
-      // 2. Safely check the data
+      // Check the data
       bool isParticipant = data != null && data['user_type'] == 'participant';
 
       if (!isParticipant) {

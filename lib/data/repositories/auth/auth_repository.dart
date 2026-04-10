@@ -12,7 +12,6 @@ class AuthRepository extends ChangeNotifier {
   final AuthService _authService;
 
   bool get isAuthenticated => (_authService.currentSession != null);
-
   bool _isRecoveringPassword = false;
   bool get isRecoveringPassword => _isRecoveringPassword;
 
@@ -40,7 +39,7 @@ class AuthRepository extends ChangeNotifier {
 
   // Adjust return type to match what AuthService actually returns
   Future<Result<AuthResponse>> login(String email, String password) async {
-    // 1. Lock the router
+    // LOCK THE ROUTER
     _isVerifyingAuth = true;
     notifyListeners();
 
@@ -58,7 +57,7 @@ class AuthRepository extends ChangeNotifier {
     _isVerifyingAuth = true;
   }
 
-  void unlock() {
+  void unlockRouter() {
     _isVerifyingAuth = false;
     notifyListeners();
   }

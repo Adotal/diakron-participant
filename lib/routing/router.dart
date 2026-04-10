@@ -21,6 +21,7 @@ import 'package:diakron_participant/ui/home/widgets/home_screen.dart';
 import 'package:diakron_participant/ui/main/widgets/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 GoRouter router(AuthRepository authRepository) => GoRouter(
@@ -165,12 +166,11 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
 );
 Future<String?> _redirect(BuildContext context, GoRouterState state) async {
   final authRepo = context.read<AuthRepository>();
-
+  final logger = Logger();
+  logger.w('rouer');
   // NEW: Highest Priority Guard.
   // If we are currently logging in and querying the 'users' table, do nothing.
-  if (authRepo.isVerifyingAuth) {
-    return null;
-  }
+ 
 
   final bool loggedIn = authRepo.isAuthenticated;
   // Auth Check
@@ -183,9 +183,6 @@ Future<String?> _redirect(BuildContext context, GoRouterState state) async {
 
   // // Locations
   final bool isAtLogin = state.matchedLocation == Routes.login;
-  // final bool isAtReset = state.matchedLocation == Routes.resetpassword;
-  // final bool isAtForgot = state.matchedLocation == Routes.forgotpassword;
-  // final bool isAtSignup = state.matchedLocation == Routes.signup;
 
   // Password Recovery
   if (authRepo.isRecoveringPassword) {
@@ -195,6 +192,10 @@ Future<String?> _redirect(BuildContext context, GoRouterState state) async {
   // If not logged in and not in auth page go to Login
   if (!loggedIn) {
     return isAtAuthPage ? null : Routes.login;
+  }
+
+   if (authRepo.isVerifyingAuth) {
+    return null;
   }
 
   // Logged in in login go Home
