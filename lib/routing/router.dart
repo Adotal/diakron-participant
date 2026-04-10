@@ -14,7 +14,8 @@ import 'package:diakron_participant/ui/home/coupon_details/view_models/coupon_de
 import 'package:diakron_participant/ui/home/coupon_details/widgets/coupon_detail_screen.dart';
 import 'package:diakron_participant/ui/profile/view_models/profile_viewmodel.dart';
 import 'package:diakron_participant/ui/profile/widgets/profle_screen.dart';
-import 'package:diakron_participant/ui/progress/widgets/progress_screen.dart';
+import 'package:diakron_participant/ui/progress/view_models/favorites_viewmodel.dart';
+import 'package:diakron_participant/ui/progress/widgets/favorites_screen.dart';
 import 'package:diakron_participant/ui/home/view_models/home_viewmodel.dart';
 import 'package:diakron_participant/ui/home/widgets/home_screen.dart';
 import 'package:diakron_participant/ui/main/widgets/main_screen.dart';
@@ -64,9 +65,10 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
           ],
         ),
         GoRoute(
-          path: Routes.progress,
+          path: Routes.favorites,
           builder: (context, state) {
-            return ProgressScreen();
+            final viewModel = FavoritesViewmodel(participantRepository: context.read<ParticipantRepository>());
+            return FavoritesScreen(viewModel: viewModel,);
           },
         ),
 

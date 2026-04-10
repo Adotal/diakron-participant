@@ -13,8 +13,8 @@ abstract final class Routes {
 
   static String couponById(String id) => '$home/$id';
   
-  static const progressRelative = 'progress';
-  static const progress = '/$progressRelative';
+  static const favoritesRelative = 'favorites';
+  static const favorites = '/$favoritesRelative';
 
   static const scanner = '/$scannerRelative';
   static const scannerRelative = 'scanner';

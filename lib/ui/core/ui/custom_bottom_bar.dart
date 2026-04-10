@@ -48,10 +48,10 @@ class CustomBottomBar extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(
               currentIndex == 1
-                  ? Icons.trending_up_rounded
-                  : Icons.trending_up_outlined,
+                  ? Icons.favorite_rounded
+                  : Icons.favorite_border_outlined,
             ),
-            label: 'Progreso',
+            label: 'Favoritos',
           ),
           BottomNavigationBarItem(
             icon: Icon(

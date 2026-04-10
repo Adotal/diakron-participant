@@ -10,7 +10,7 @@ class MainScreen extends StatelessWidget {
   // Top level destinations
   static const List<String> _destinations = [
     Routes.home,
-    Routes.progress,
+    Routes.favorites,
     Routes.scanner,
     Routes.map,
     Routes.profile,

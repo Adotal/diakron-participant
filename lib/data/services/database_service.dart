@@ -81,12 +81,30 @@ class DatabaseService {
     required String participantId,
   }) async {
     try {
-      final response = await _supabase
+      await _supabase
           .from('favorite_coupons')
           .delete()
           .eq('id_coupon', couponId)
           .eq('id_participant', participantId);
       return Result.ok(null);
+    } on Exception catch (error) {
+      return Result.error(error);
+    }
+  }
+
+  Future<Result<List<Map>>> fetchFavoriteCoupons({
+    required String participantId,
+  }) async {
+    try {
+      final result = await _supabase.from('favorite_coupons')
+        .select('''
+          id_coupon,
+          coupons (*)
+        ''')
+        .eq('id_participant', participantId);
+
+
+      return Result.ok(result);
     } on Exception catch (error) {
       return Result.error(error);
     }

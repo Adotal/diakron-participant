@@ -137,4 +137,32 @@ class ParticipantRepository {
       return Result.error(error);
     }
   }
+
+  Future<Result<List<Coupon>>> fetchFavoriteCoupons({
+    required String participantId,
+  }) async {
+    try {
+      final result = await _databaseService.fetchFavoriteCoupons(
+        participantId: participantId,
+      );
+
+      switch (result) {
+        case Ok<List<Map<dynamic, dynamic>>>():
+          final List<dynamic> data = result.value;
+
+          final List<Coupon> favoriteCoupons = data.map((item) {
+            // Access the nested 'coupons' map
+            final couponMap = item['coupons'] as Map<String, dynamic>;
+            return Coupon.fromJson(couponMap);
+          }).toList();
+
+          return Result.ok(favoriteCoupons);
+
+        case Error<List<Map<dynamic, dynamic>>>():
+          return Result.error(result.error);
+      }
+    } on Exception catch (error) {
+      return Result.error(error);
+    }
+  }
 }

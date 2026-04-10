@@ -1,27 +1,23 @@
-// home_viewmodel.dart
 import 'package:diakron_participant/data/repositories/user/participant_repository.dart';
 import 'package:diakron_participant/models/coupon/coupon.dart';
 import 'package:diakron_participant/models/users/participant.dart';
 import 'package:diakron_participant/utils/command.dart';
 import 'package:diakron_participant/utils/result.dart';
-import 'package:flutter/foundation.dart';
-import 'package:logger/web.dart';
+import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
-
-enum CouponSort { none, priceAsc, priceDesc, dateAsc, dateDesc }
-
-class HomeViewModel extends ChangeNotifier {
-  HomeViewModel({required ParticipantRepository participantRepository})
+class FavoritesViewmodel extends ChangeNotifier {
+  FavoritesViewmodel({required ParticipantRepository participantRepository})
     : _participantRepository = participantRepository {
-    load = Command0(_load)..execute();
-  }
 
-  final _logger = Logger();
+    load = Command0(_load)..execute();
+    }
 
   final ParticipantRepository _participantRepository;
-  
-  late Command0 load;
+
+    late Command0 load;
   int _points = 0;
+  String? _participantId;
   int get points => _points;
 
     // Two list, one for source of truth and second for search and filters
@@ -34,28 +30,27 @@ class HomeViewModel extends ChangeNotifier {
   // Checks if there are absolutely zero coupons in the system 
   String _searchQuery = '';
 
-  CouponSort _currentSort = CouponSort.none;
-  CouponSort get currentSort => _currentSort;
+ bool get isSearching => _searchQuery.isNotEmpty;
 
-  // We consider it "searching" if the text is not empty 
-  // OR if a specific sort/filter (other than default) is applied.
- bool get isSearching => _searchQuery.isNotEmpty || _currentSort != CouponSort.none;
-
-
-  Future<Result<void>> _load() async {
+  final _logger = Logger();
+ 
+ Future<Result<void>> _load() async {
     try {
       // First fetch participant user (for number of points)
       final participantResult = await _participantRepository.getParticipant();
       switch (participantResult) {
         case Ok<Participant>():
           _points = participantResult.value.points;
+          _participantId = participantResult.value.id;
         case Error<Participant>():
           return Result.error(participantResult.error);
       }
 
+   
+
       // Fetch list of coupons
-           // Fetch Coupons
-      final result = await _participantRepository.fetchCoupons();
+      final result = await _participantRepository.fetchFavoriteCoupons(participantId:  _participantId!);
+      // final result = await _participantRepository.fetchCoupons();
 
       switch (result) {
         case Ok<List<Coupon>>():
@@ -82,13 +77,9 @@ class HomeViewModel extends ChangeNotifier {
   void updateSearchQuery(String query) {
     _searchQuery = query;
     _applyFilters();
+    
   }
-
-  void updateSort(CouponSort sort) {
-    _currentSort = sort;
-    _applyFilters();
-  }
-
+  
   void _applyFilters() {
     // 1. Apply Text Search (by title)
     var temp = _allCoupons.where((c) {
@@ -96,33 +87,12 @@ class HomeViewModel extends ChangeNotifier {
       return c.title.toLowerCase().contains(_searchQuery.toLowerCase());
     }).toList();
 
-    // 2. Apply Sort Filters
-    switch (_currentSort) {
-      case CouponSort.priceAsc:
-        temp.sort((a, b) => a.pricePoints.compareTo(b.pricePoints));
-        break;
-      case CouponSort.priceDesc:
-        temp.sort((a, b) => b.pricePoints.compareTo(a.pricePoints));
-        break;
-      case CouponSort.dateAsc:
-        temp.sort((a, b) => a.expirationDate.compareTo(b.expirationDate));
-        break;
-      case CouponSort.dateDesc:
-        temp.sort((a, b) => b.expirationDate.compareTo(a.expirationDate));
-        break;
-      case CouponSort.none:
-      default:
-        // Optional: Default sort (e.g., newest first based on ID or creation date)
-        break;
-    }
-
     _filteredCoupons = temp;
     notifyListeners();
   }
-  // Function to clean everything
+    // Function to clean everything
   void clearFilters() {
     _searchQuery = "";
-    _currentSort = CouponSort.none;
     _applyFilters();
   }
 }

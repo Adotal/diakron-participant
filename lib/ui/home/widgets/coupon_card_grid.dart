@@ -12,7 +12,7 @@ class CouponCardGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.go(Routes.couponById('${coupon.id}')),
+      onTap: () => context.push(Routes.couponById('${coupon.id}')),
       child: Container(
         decoration: BoxDecoration(
           // color: Theme.of(context).cardColor,
