@@ -21,6 +21,9 @@ dependencies:
   mapbox_maps_flutter: ^2.21.1
   provider: ^6.1.5+1
   supabase_flutter: ^2.12.0
+  qr_flutter: ^4.1.0       # Para generar el QR (Versión 5, Nivel M)
+  cryptography: ^2.7.0     # Para la firma Ed25519
+  convert: ^3.1.1          # Para la conversión a Hexadecimal
 
 dev_dependencies:
   flutter_test:

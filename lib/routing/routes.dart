@@ -24,4 +24,7 @@ abstract final class Routes {
 
   static const profile = '/$profileRelative';
   static const profileRelative = 'profile';
+
+  static const qrCouponRelative = 'qr-coupon';
+  static const qrCoupon = '/$qrCouponRelative';
 }

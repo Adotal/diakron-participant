@@ -15,15 +15,21 @@ class CouponDetailViewmodel extends ChangeNotifier {
        _couponId = couponId {
     load = Command0(_load)..execute();
     toggleFavorite = Command0(_toggleFavorite);
+    redeemBenefit = Command0(_redeemBenefit);
   }
 
   final int _couponId;
+  int get couponId => _couponId;
+  int _userPoints = 0;
+  int get userPoints => _userPoints;
   // For adding favorites
   String? _userId;
+  String get userId => _userId!;
   final ParticipantRepository _participantRepository;
 
   late Command0 load;
   late Command0 toggleFavorite;
+  late Command0 redeemBenefit;
 
   Coupon? _coupon;
   Coupon? get coupon => _coupon;
@@ -36,11 +42,12 @@ class CouponDetailViewmodel extends ChangeNotifier {
 
   Future<Result<void>> _load() async {
     try {
-      // Get participant Id
+      // Get participant Id and points
       final user = await _participantRepository.getParticipant();
       switch (user) {
         case Ok<Participant>():
           _userId = user.value.id;
+          _userPoints = user.value.points;
         case Error<Participant>():
           return Result.error(user.error);
       }
@@ -123,5 +130,12 @@ class CouponDetailViewmodel extends ChangeNotifier {
     } finally {
       notifyListeners();
     }
+  }
+
+  Future<Result<void>> _redeemBenefit() async {
+    if (_coupon!.pricePoints > userPoints) {
+      return Result.error(Exception('No enough points'));
+    }
+    return Result.ok(null);
   }
 }

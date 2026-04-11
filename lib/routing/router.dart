@@ -25,6 +25,7 @@ import 'package:diakron_participant/ui/progress/widgets/favorites_screen.dart';
 import 'package:diakron_participant/ui/home/view_models/home_viewmodel.dart';
 import 'package:diakron_participant/ui/home/widgets/home_screen.dart';
 import 'package:diakron_participant/ui/main/widgets/main_screen.dart';
+import 'package:diakron_participant/ui/qr_coupon/widgets/qr_coupon_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
@@ -37,6 +38,18 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
   redirect: _redirect,
 
   routes: [
+    GoRoute(
+      path:
+          '${Routes.qrCoupon}/:userId/:couponId', // Definimos los parámetros en el path
+      name: Routes.qrCoupon,
+      builder: (context, state) {
+        // Extraemos los parámetros y los convertimos a int
+        final userId = state.pathParameters['userId']!;
+        final couponId = int.parse(state.pathParameters['couponId']!);
+
+        return QRCouponScreen(userId: userId, couponId: couponId);
+      },
+    ),
     ShellRoute(
       builder: (context, state, child) {
         return MainScreen(child: child);
@@ -74,8 +87,10 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
         GoRoute(
           path: Routes.favorites,
           builder: (context, state) {
-            final viewModel = FavoritesViewmodel(participantRepository: context.read<ParticipantRepository>());
-            return FavoritesScreen(viewModel: viewModel,);
+            final viewModel = FavoritesViewmodel(
+              participantRepository: context.read<ParticipantRepository>(),
+            );
+            return FavoritesScreen(viewModel: viewModel);
           },
         ),
 
@@ -173,7 +188,7 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
 );
 Future<String?> _redirect(BuildContext context, GoRouterState state) async {
   final authRepo = context.read<AuthRepository>();
-  
+
   final bool loggedIn = authRepo.isAuthenticated;
   // Auth Check
   final bool isAtAuthPage = [
@@ -196,7 +211,7 @@ Future<String?> _redirect(BuildContext context, GoRouterState state) async {
     return isAtAuthPage ? null : Routes.login;
   }
 
-   if (authRepo.isVerifyingAuth) {
+  if (authRepo.isVerifyingAuth) {
     return null;
   }
 

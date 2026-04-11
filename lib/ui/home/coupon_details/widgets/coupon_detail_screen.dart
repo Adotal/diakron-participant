@@ -1,9 +1,13 @@
 import 'package:diakron_participant/models/coupon/coupon.dart';
+import 'package:diakron_participant/routing/routes.dart';
 import 'package:diakron_participant/ui/core/ui/error_indicator.dart';
+import 'package:diakron_participant/ui/core/ui/form_button.dart';
 import 'package:diakron_participant/ui/home/coupon_details/view_models/coupon_detail_viewmodel.dart';
 import 'package:diakron_participant/ui/home/coupon_details/widgets/business_card.dart';
 import 'package:diakron_participant/ui/home/coupon_details/widgets/business_details_dialog.dart';
+import 'package:diakron_participant/utils/result.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CouponDetailScreen extends StatefulWidget {
   const CouponDetailScreen({super.key, required this.viewModel});
@@ -19,6 +23,7 @@ class _CouponDetailScreenState extends State<CouponDetailScreen> {
   void initState() {
     super.initState();
     widget.viewModel.toggleFavorite.addListener(_onAddFavorite);
+    widget.viewModel.redeemBenefit.addListener(_onRedeem);
   }
 
   @override
@@ -27,12 +32,16 @@ class _CouponDetailScreenState extends State<CouponDetailScreen> {
     if (oldWidget.viewModel != widget.viewModel) {
       oldWidget.viewModel.toggleFavorite.removeListener(_onAddFavorite);
       widget.viewModel.toggleFavorite.addListener(_onAddFavorite);
+
+      oldWidget.viewModel.redeemBenefit.removeListener(_onRedeem);
+      widget.viewModel.redeemBenefit.addListener(_onRedeem);
     }
   }
 
   @override
   void dispose() {
     widget.viewModel.toggleFavorite.removeListener(_onAddFavorite);
+    widget.viewModel.redeemBenefit.removeListener(_onRedeem);
     super.dispose();
   }
 
@@ -201,32 +210,18 @@ class _CouponDetailScreenState extends State<CouponDetailScreen> {
                             ),
                           ),
                           const SizedBox(height: 20),
-
-                          // Call to Action Button
                           SizedBox(
                             width: double.infinity,
-                            height: 55, // Fixed height for impact
-                            child: ElevatedButton(
+                            height: 55,
+                            child: FormButton(
+                              text: 'Canjear recompensa',
                               onPressed: () {
-                                // Redeem logic
+                                widget.viewModel.redeemBenefit.execute();
                               },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: primaryColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                elevation: 4,
-                              ),
-                              child: const Text(
-                                "Canjear Recompensa",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
+                              listenable: widget.viewModel.redeemBenefit,
                             ),
                           ),
+
                           const SizedBox(height: 30), // Bottom padding
                         ],
                       ),
@@ -266,6 +261,31 @@ class _CouponDetailScreenState extends State<CouponDetailScreen> {
       widget.viewModel.toggleFavorite.clearResult();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Error añadiendo cupón a favoritos")),
+      );
+    }
+  }
+
+  void _onRedeem() {
+    if (widget.viewModel.redeemBenefit.completed) {
+      widget.viewModel.redeemBenefit.clearResult();
+      context.pushNamed(
+        Routes.qrCoupon,
+        pathParameters: {
+          'userId': widget.viewModel.userId,
+          'couponId': '${widget.viewModel.couponId}',
+        },
+      );
+    }
+
+    if (widget.viewModel.redeemBenefit.error) {
+      final error = widget.viewModel.redeemBenefit.result;
+      widget.viewModel.redeemBenefit.clearResult();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.toString()),
+
+          duration: Duration(seconds: 1),
+        ),
       );
     }
   }
