@@ -43,7 +43,7 @@ class CouponDetailViewmodel extends ChangeNotifier {
   Future<Result<void>> _load() async {
     try {
       // Get participant Id and points
-      final user = await _participantRepository.getParticipant(forceRefresh: true);
+      final user = await _participantRepository.getParticipant();
       switch (user) {
         case Ok<Participant>():
           _userId = user.value.id;

@@ -59,7 +59,7 @@ class QRCouponViewmodel extends ChangeNotifier {
     // Extraer el token JWT
     final String userAuthToken = session.accessToken;
 
-    const url = 'http://localhost:3000/gen-qr';
+    const url = 'https://diakron-backend.onrender.com/gen-qr';
 
     _logger.i('JWT: $userAuthToken, $couponId');
     // Hacer la petición con el token en la cabecera

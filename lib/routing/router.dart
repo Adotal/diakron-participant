@@ -3,6 +3,7 @@
 import 'package:diakron_participant/data/repositories/auth/auth_repository.dart';
 import 'package:diakron_participant/data/repositories/map/map_repository_impl.dart';
 import 'package:diakron_participant/data/repositories/user/participant_repository.dart';
+import 'package:diakron_participant/models/users/participant.dart';
 import 'package:diakron_participant/routing/routes.dart';
 import 'package:diakron_participant/ui/auth/forgot_password/view_models/forgot_password_viewmodel.dart';
 import 'package:diakron_participant/ui/auth/forgot_password/widgets/forgot_password_screen.dart';
@@ -60,18 +61,29 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
       routes: [
         GoRoute(
           path: Routes.home,
-          pageBuilder: (context, state) => CustomTransitionPage(
-            key: state.pageKey,
-            child: HomeScreen(
-              viewModel: HomeViewModel(
-                participantRepository: context.read<ParticipantRepository>(),
+          pageBuilder: (context, state) {
+            return CustomTransitionPage(
+              key: state.pageKey,
+              // Wrap the Home branch in the Provider so it stays alive during navigation
+              child: ChangeNotifierProvider<HomeViewModel>(
+                create: (context) => HomeViewModel(
+                  participantRepository: context.read<ParticipantRepository>(),
+                ),
+                // Use a Builder to access the newly created Provider context safely
+                child: Builder(
+                  builder: (context) {
+                    // Use context.read()
+                    final viewModel = context.read<HomeViewModel>();
+                    return HomeScreen(viewModel: viewModel);
+                  },
+                ),
               ),
-            ),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              // Use a simple fade so the pre-charged home page appears smoothly
-              return FadeTransition(opacity: animation, child: child);
-            },
-          ),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                    return FadeTransition(opacity: animation, child: child);
+                  },
+            );
+          },
           routes: [
             GoRoute(
               path: ':id', // This matches the ${center.id} in your push
@@ -89,13 +101,36 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
         ),
         GoRoute(
           path: Routes.favorites,
-          builder: (context, state) {
-            final viewModel = FavoritesViewmodel(
-              participantRepository: context.read<ParticipantRepository>(),
+          pageBuilder: (context, state) {
+            return MaterialPage(
+              key: state.pageKey,
+              // Wrap the Home branch in the Provider so it stays alive during navigation
+              child: ChangeNotifierProvider<FavoritesViewmodel>(
+                create: (context) => FavoritesViewmodel(
+                  participantRepository: context.read<ParticipantRepository>(),
+                ),
+                // Use a Builder to access the newly created Provider context safely
+                child: Builder(
+                  builder: (context) {
+                    // Use context.read()
+                    final viewModel = context.read<FavoritesViewmodel>();
+                    return FavoritesScreen(viewModel: viewModel);
+                  },
+                ),
+              ),
             );
-            return FavoritesScreen(viewModel: viewModel);
           },
         ),
+
+        // GoRoute(
+        //   path: Routes.favorites,
+        //   builder: (context, state) {
+        //     final viewModel = FavoritesViewmodel(
+        //       participantRepository: context.read<ParticipantRepository>(),
+        //     );
+        //     return FavoritesScreen(viewModel: viewModel);
+        //   },
+        // ),
 
         GoRoute(
           path: Routes.scanner,

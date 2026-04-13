@@ -15,6 +15,14 @@ class FavoritesScreen extends StatefulWidget {
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
+  void initState() {
+    super.initState();
+    if (widget.viewModel.coupons.isEmpty && !widget.viewModel.load.running) {
+      widget.viewModel.load.execute();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return CustomScreen(
       title: 'Favoritos',

@@ -10,7 +10,7 @@ class FavoritesViewmodel extends ChangeNotifier {
   FavoritesViewmodel({required ParticipantRepository participantRepository})
     : _participantRepository = participantRepository {
 
-    load = Command0(_load)..execute();
+    load = Command0(_load);
     }
 
   final ParticipantRepository _participantRepository;

@@ -16,6 +16,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    super.initState();
+    if (widget.viewModel.coupons.isEmpty && !widget.viewModel.load.running) {
+      widget.viewModel.load.execute();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return CustomScreen(
@@ -60,17 +68,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         onChanged: widget.viewModel.updateSearchQuery,
                         trailing: [
-                          if(widget.viewModel.isSearching)
-                             IconButton(
-                          icon: const Icon(Icons.filter_list_off),
-                          onPressed: () => widget.viewModel.clearFilters(),
-                          ),  
-                          if(!widget.viewModel.isSearching)
-                          IconButton(
-                          icon: const Icon(Icons.filter_list),
-                          onPressed: () => _showFilterSheet(context),
-                          ),
-                       
+                          if (widget.viewModel.isSearching)
+                            IconButton(
+                              icon: const Icon(Icons.filter_list_off),
+                              onPressed: () => widget.viewModel.clearFilters(),
+                            ),
+                          if (!widget.viewModel.isSearching)
+                            IconButton(
+                              icon: const Icon(Icons.filter_list),
+                              onPressed: () => _showFilterSheet(context),
+                            ),
                         ],
                       ),
                     ),
@@ -80,42 +87,43 @@ class _HomeScreenState extends State<HomeScreen> {
                   // SliverToBoxAdapter(child: _buildBanner(theme)),
 
                   // 4. HORIZONTAL SECTION (Popular)
-                  if(!widget.viewModel.isSearching)
-                  SliverToBoxAdapter(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
-                          child: Text(
-                            "Populares 🔥🤑",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                  if (!widget.viewModel.isSearching)
+                    SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
+                            child: Text(
+                              "Populares 🔥🤑",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 180,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.only(left: 20),
-                            itemCount: 5,
-                            itemBuilder: (context, index) =>
-                                _buildStoreCard(context),
+                          SizedBox(
+                            height: 180,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.only(left: 20),
+                              itemCount: 5,
+                              itemBuilder: (context, index) =>
+                                  _buildStoreCard(context),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
 
                   // 5. VERTICAL GRID (All Benefits)
                   SliverPadding(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
                     sliver: SliverToBoxAdapter(
                       child: Text(
-                        widget.viewModel.isSearching ? "Resultados de búsqueda":
-                        "Todos los beneficios",
+                        widget.viewModel.isSearching
+                            ? "Resultados de búsqueda"
+                            : "Todos los beneficios",
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -180,7 +188,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-   void _showFilterSheet(BuildContext context) {
+
+  void _showFilterSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -218,6 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
+
   Widget _buildRadioTile(String title, CouponSort value) {
     return RadioListTile<CouponSort>(
       title: Text(title),
@@ -232,7 +242,6 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
-
 
   Widget _buildStoreCard(BuildContext context) {
     // Usamos colores fijos para la tarjeta interna (naranja suave)
