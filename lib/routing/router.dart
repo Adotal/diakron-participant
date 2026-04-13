@@ -1,8 +1,6 @@
 // Routes manager
-import 'dart:collection';
 
 import 'package:diakron_participant/data/repositories/auth/auth_repository.dart';
-import 'package:diakron_participant/data/repositories/map/map_repository.dart';
 import 'package:diakron_participant/data/repositories/map/map_repository_impl.dart';
 import 'package:diakron_participant/data/repositories/user/participant_repository.dart';
 import 'package:diakron_participant/routing/routes.dart';
@@ -25,10 +23,10 @@ import 'package:diakron_participant/ui/progress/widgets/favorites_screen.dart';
 import 'package:diakron_participant/ui/home/view_models/home_viewmodel.dart';
 import 'package:diakron_participant/ui/home/widgets/home_screen.dart';
 import 'package:diakron_participant/ui/main/widgets/main_screen.dart';
+import 'package:diakron_participant/ui/qr_coupon/view_models/qr_coupon_viewmodel.dart';
 import 'package:diakron_participant/ui/qr_coupon/widgets/qr_coupon_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 GoRouter router(AuthRepository authRepository) => GoRouter(
@@ -46,8 +44,13 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
         // Extraemos los parámetros y los convertimos a int
         final userId = state.pathParameters['userId']!;
         final couponId = int.parse(state.pathParameters['couponId']!);
+        final viewModel = QRCouponViewmodel(
+          authRepository: context.read<AuthRepository>(),
+          couponId: couponId,
+          userId: userId,
+        );
 
-        return QRCouponScreen(userId: userId, couponId: couponId);
+        return QRCouponScreen(viewModel: viewModel);
       },
     ),
     ShellRoute(

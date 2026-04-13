@@ -5,7 +5,6 @@ import 'package:diakron_participant/ui/core/ui/form_button.dart';
 import 'package:diakron_participant/ui/home/coupon_details/view_models/coupon_detail_viewmodel.dart';
 import 'package:diakron_participant/ui/home/coupon_details/widgets/business_card.dart';
 import 'package:diakron_participant/ui/home/coupon_details/widgets/business_details_dialog.dart';
-import 'package:diakron_participant/utils/result.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

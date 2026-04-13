@@ -14,6 +14,7 @@ class AuthRepository extends ChangeNotifier {
   bool get isAuthenticated => (_authService.currentSession != null);
   bool _isRecoveringPassword = false;
   bool get isRecoveringPassword => _isRecoveringPassword;
+  Session? get currentSession => _authService.currentSession;
 
   // State flag to freeze the router during check of USER TYPE and for permit ANIMATION
   bool _isVerifyingAuth = false;
