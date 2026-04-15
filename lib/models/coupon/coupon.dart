@@ -14,7 +14,7 @@ abstract class Coupon with _$Coupon {
     required String descript,
     required int pricePoints,
     required DateTime expirationDate,
-    required int couponsLeft,
+    required int? couponsLeft,
     required bool isActive,
     required String pathImage,
   }) = _Coupon;

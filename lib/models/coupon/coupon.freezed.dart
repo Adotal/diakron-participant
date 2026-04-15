@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Coupon {
 
- int? get id; String get idStore; String get title; String get descript; int get pricePoints; DateTime get expirationDate; int get couponsLeft; bool get isActive; String get pathImage;
+ int? get id; String get idStore; String get title; String get descript; int get pricePoints; DateTime get expirationDate; int? get couponsLeft; bool get isActive; String get pathImage;
 /// Create a copy of Coupon
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $CouponCopyWith<$Res>  {
   factory $CouponCopyWith(Coupon value, $Res Function(Coupon) _then) = _$CouponCopyWithImpl;
 @useResult
 $Res call({
- int? id, String idStore, String title, String descript, int pricePoints, DateTime expirationDate, int couponsLeft, bool isActive, String pathImage
+ int? id, String idStore, String title, String descript, int pricePoints, DateTime expirationDate, int? couponsLeft, bool isActive, String pathImage
 });
 
 
@@ -65,7 +65,7 @@ class _$CouponCopyWithImpl<$Res>
 
 /// Create a copy of Coupon
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? idStore = null,Object? title = null,Object? descript = null,Object? pricePoints = null,Object? expirationDate = null,Object? couponsLeft = null,Object? isActive = null,Object? pathImage = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? idStore = null,Object? title = null,Object? descript = null,Object? pricePoints = null,Object? expirationDate = null,Object? couponsLeft = freezed,Object? isActive = null,Object? pathImage = null,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,idStore: null == idStore ? _self.idStore : idStore // ignore: cast_nullable_to_non_nullable
@@ -73,8 +73,8 @@ as String,title: null == title ? _self.title : title // ignore: cast_nullable_to
 as String,descript: null == descript ? _self.descript : descript // ignore: cast_nullable_to_non_nullable
 as String,pricePoints: null == pricePoints ? _self.pricePoints : pricePoints // ignore: cast_nullable_to_non_nullable
 as int,expirationDate: null == expirationDate ? _self.expirationDate : expirationDate // ignore: cast_nullable_to_non_nullable
-as DateTime,couponsLeft: null == couponsLeft ? _self.couponsLeft : couponsLeft // ignore: cast_nullable_to_non_nullable
-as int,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
+as DateTime,couponsLeft: freezed == couponsLeft ? _self.couponsLeft : couponsLeft // ignore: cast_nullable_to_non_nullable
+as int?,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
 as bool,pathImage: null == pathImage ? _self.pathImage : pathImage // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -161,7 +161,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String idStore,  String title,  String descript,  int pricePoints,  DateTime expirationDate,  int couponsLeft,  bool isActive,  String pathImage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String idStore,  String title,  String descript,  int pricePoints,  DateTime expirationDate,  int? couponsLeft,  bool isActive,  String pathImage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Coupon() when $default != null:
 return $default(_that.id,_that.idStore,_that.title,_that.descript,_that.pricePoints,_that.expirationDate,_that.couponsLeft,_that.isActive,_that.pathImage);case _:
@@ -182,7 +182,7 @@ return $default(_that.id,_that.idStore,_that.title,_that.descript,_that.pricePoi
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String idStore,  String title,  String descript,  int pricePoints,  DateTime expirationDate,  int couponsLeft,  bool isActive,  String pathImage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String idStore,  String title,  String descript,  int pricePoints,  DateTime expirationDate,  int? couponsLeft,  bool isActive,  String pathImage)  $default,) {final _that = this;
 switch (_that) {
 case _Coupon():
 return $default(_that.id,_that.idStore,_that.title,_that.descript,_that.pricePoints,_that.expirationDate,_that.couponsLeft,_that.isActive,_that.pathImage);case _:
@@ -202,7 +202,7 @@ return $default(_that.id,_that.idStore,_that.title,_that.descript,_that.pricePoi
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String idStore,  String title,  String descript,  int pricePoints,  DateTime expirationDate,  int couponsLeft,  bool isActive,  String pathImage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String idStore,  String title,  String descript,  int pricePoints,  DateTime expirationDate,  int? couponsLeft,  bool isActive,  String pathImage)?  $default,) {final _that = this;
 switch (_that) {
 case _Coupon() when $default != null:
 return $default(_that.id,_that.idStore,_that.title,_that.descript,_that.pricePoints,_that.expirationDate,_that.couponsLeft,_that.isActive,_that.pathImage);case _:
@@ -226,7 +226,7 @@ class _Coupon extends Coupon {
 @override final  String descript;
 @override final  int pricePoints;
 @override final  DateTime expirationDate;
-@override final  int couponsLeft;
+@override final  int? couponsLeft;
 @override final  bool isActive;
 @override final  String pathImage;
 
@@ -263,7 +263,7 @@ abstract mixin class _$CouponCopyWith<$Res> implements $CouponCopyWith<$Res> {
   factory _$CouponCopyWith(_Coupon value, $Res Function(_Coupon) _then) = __$CouponCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, String idStore, String title, String descript, int pricePoints, DateTime expirationDate, int couponsLeft, bool isActive, String pathImage
+ int? id, String idStore, String title, String descript, int pricePoints, DateTime expirationDate, int? couponsLeft, bool isActive, String pathImage
 });
 
 
@@ -280,7 +280,7 @@ class __$CouponCopyWithImpl<$Res>
 
 /// Create a copy of Coupon
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? idStore = null,Object? title = null,Object? descript = null,Object? pricePoints = null,Object? expirationDate = null,Object? couponsLeft = null,Object? isActive = null,Object? pathImage = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? idStore = null,Object? title = null,Object? descript = null,Object? pricePoints = null,Object? expirationDate = null,Object? couponsLeft = freezed,Object? isActive = null,Object? pathImage = null,}) {
   return _then(_Coupon(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,idStore: null == idStore ? _self.idStore : idStore // ignore: cast_nullable_to_non_nullable
@@ -288,8 +288,8 @@ as String,title: null == title ? _self.title : title // ignore: cast_nullable_to
 as String,descript: null == descript ? _self.descript : descript // ignore: cast_nullable_to_non_nullable
 as String,pricePoints: null == pricePoints ? _self.pricePoints : pricePoints // ignore: cast_nullable_to_non_nullable
 as int,expirationDate: null == expirationDate ? _self.expirationDate : expirationDate // ignore: cast_nullable_to_non_nullable
-as DateTime,couponsLeft: null == couponsLeft ? _self.couponsLeft : couponsLeft // ignore: cast_nullable_to_non_nullable
-as int,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
+as DateTime,couponsLeft: freezed == couponsLeft ? _self.couponsLeft : couponsLeft // ignore: cast_nullable_to_non_nullable
+as int?,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
 as bool,pathImage: null == pathImage ? _self.pathImage : pathImage // ignore: cast_nullable_to_non_nullable
 as String,
   ));

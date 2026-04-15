@@ -13,7 +13,7 @@ _Coupon _$CouponFromJson(Map<String, dynamic> json) => _Coupon(
   descript: json['descript'] as String,
   pricePoints: (json['price_points'] as num).toInt(),
   expirationDate: DateTime.parse(json['expiration_date'] as String),
-  couponsLeft: (json['coupons_left'] as num).toInt(),
+  couponsLeft: (json['coupons_left'] as num?)?.toInt(),
   isActive: json['is_active'] as bool,
   pathImage: json['path_image'] as String,
 );
