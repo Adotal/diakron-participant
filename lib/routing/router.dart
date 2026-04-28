@@ -3,7 +3,6 @@
 import 'package:diakron_participant/data/repositories/auth/auth_repository.dart';
 import 'package:diakron_participant/data/repositories/map/map_repository_impl.dart';
 import 'package:diakron_participant/data/repositories/user/participant_repository.dart';
-import 'package:diakron_participant/models/users/participant.dart';
 import 'package:diakron_participant/routing/routes.dart';
 import 'package:diakron_participant/ui/auth/forgot_password/view_models/forgot_password_viewmodel.dart';
 import 'package:diakron_participant/ui/auth/forgot_password/widgets/forgot_password_screen.dart';
@@ -216,7 +215,7 @@ GoRouter router(AuthRepository authRepository) => GoRouter(
     GoRoute(
       path: Routes.signup,
       builder: (context, state) {
-        final viewModel = SignupViewmodel(
+        final viewModel = SignupViewModel(
           authRepository: context.read<AuthRepository>(),
         );
         return SignupScreen(viewModel: viewModel);

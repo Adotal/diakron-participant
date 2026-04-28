@@ -5,7 +5,6 @@ import 'package:diakron_participant/data/services/database_service.dart';
 import 'package:diakron_participant/l10n/app_localizations.dart';
 import 'package:diakron_participant/routing/router.dart';
 import 'package:diakron_participant/ui/core/themes/colors.dart';
-import 'package:diakron_participant/ui/home/view_models/home_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
